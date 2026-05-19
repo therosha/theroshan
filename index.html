@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formula 1 Car Showcase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --red: #E8001C;
+      --red-dark: #9e0013;
+      --off-white: #F0EDE8;
+      --warm-gray: #B8B3AC;
+      --charcoal: #1A1715;
+      --mid: #2C2825;
+      --text-muted: #7A746E;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--charcoal);
+      color: var(--off-white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 60px;
+      background: transparent;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(26, 23, 21, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      color: var(--off-white);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--red);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: var(--off-white);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 650px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 60px 90px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        url('https://images.unsplash.com/photo-1598255273372-463afc26fd17?q=80&w=1800&auto=format&fit=crop') center/cover no-repeat;
+    }
+
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        rgba(26,23,21,0.95) 0%,
+        rgba(26,23,21,0.6) 50%,
+        rgba(26,23,21,0.2) 100%
+      );
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--charcoal) 0%, transparent 40%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--red);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 12vw, 9.5rem);
+      line-height: 0.9;
+      letter-spacing: 2px;
+      color: var(--off-white);
+      animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .hero-title em {
+      color: var(--red);
+      font-style: normal;
+    }
+
+    .hero-sub {
+      margin-top: 28px;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--warm-gray);
+      max-width: 480px;
+      animation: fadeUp 0.9s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .hero-actions {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      animation: fadeUp 0.9s 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 15px 36px;
+      background: var(--red);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+    }
+
+    .btn-primary:hover {
+      background: #ff1f3a;
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: var(--warm-gray);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(184,179,172,0.4);
+      padding-bottom: 2px;
+      transition: color 0.25s, border-color 0.25s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--off-white);
+      border-color: var(--off-white);
+    }
+
+    /* scroll cue */
+    .scroll-cue {
+      position: absolute;
+      bottom: 36px;
+      right: 60px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.65rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: var(--text-muted);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ─── SECTION INTRO ─── */
+    .section-intro {
+      padding: 100px 60px 60px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .section-intro h2 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+
+    .section-intro p {
+      max-width: 340px;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--warm-gray);
+      font-weight: 300;
+    }
+
+    /* ─── CARS GRID ─── */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2px;
+      padding: 0 60px 120px;
+    }
+
+    .car-card {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+
+    .car-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      filter: saturate(0.8) brightness(0.75);
+    }
+
+    .car-card:hover .car-bg {
+      transform: scale(1.06);
+      filter: saturate(1) brightness(0.6);
+    }
+
+    .car-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,23,21,0.98) 0%, rgba(26,23,21,0.1) 55%, transparent 100%);
+      transition: background 0.4s;
+    }
+
+    .car-card:hover .car-card-overlay {
+      background: linear-gradient(to top, rgba(26,23,21,1) 0%, rgba(26,23,21,0.3) 55%, rgba(232,0,28,0.08) 100%);
+    }
+
+    .car-card-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 36px 32px;
+    }
+
+    .car-number {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      line-height: 1;
+      color: rgba(240,237,232,0.08);
+      transition: color 0.4s, transform 0.4s;
+      transform: translateY(0);
+    }
+
+    .car-card:hover .car-number {
+      color: rgba(232,0,28,0.15);
+    }
+
+    .car-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .car-card-name {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .car-card-team {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: var(--warm-gray);
+      margin-top: 4px;
+    }
+
+    .car-specs-row {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(240,237,232,0.1);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s 0.05s, transform 0.35s 0.05s;
+    }
+
+    .car-card:hover .car-specs-row {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .spec-item p {
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .spec-item h4 {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--off-white);
+    }
+
+    .car-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--red);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s 0.1s, transform 0.35s 0.1s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .car-cta svg {
+      transition: transform 0.25s;
+    }
+
+    .car-cta:hover svg {
+      transform: translateX(4px);
+    }
+
+    .car-card:hover .car-cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── FACTS STRIP ─── */
+    .facts-strip {
+      background: var(--red);
+      overflow: hidden;
+      padding: 20px 0;
+    }
+
+    .facts-ticker {
+      display: flex;
+      gap: 80px;
+      animation: ticker 22s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+
+    .facts-ticker span {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+
+    .facts-ticker span::before {
+      content: '•';
+      margin-right: 80px;
+      opacity: 0.5;
+    }
+
+    /* ─── SPEED SECTION ─── */
+    .speed-section {
+      padding: 120px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .speed-left h2 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+
+    .speed-left h2 em {
+      color: var(--red);
+      font-style: normal;
+    }
+
+    .speed-left p {
+      margin-top: 24px;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--warm-gray);
+      max-width: 400px;
+    }
+
+    .speed-right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .speed-stat {
+      background: var(--mid);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .speed-stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--red);
+    }
+
+    .speed-stat:nth-child(1) { grid-column: 1 / -1; }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 4.5rem;
+      color: var(--off-white);
+      line-height: 1;
+    }
+
+    .stat-label {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .stat-desc {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--warm-gray);
+      line-height: 1.6;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,7,0.85);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--mid);
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(30px);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-hero {
+      position: relative;
+      height: 260px;
+      overflow: hidden;
+    }
+
+    .modal-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6);
+    }
+
+    .modal-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--mid) 0%, transparent 60%);
+    }
+
+    .modal-hero-text {
+      position: absolute;
+      bottom: 28px;
+      left: 36px;
+    }
+
+    .modal-hero-text span {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .modal-hero-text h2 {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      letter-spacing: 1px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(26,23,21,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--off-white);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      transition: background 0.25s;
+    }
+
+    .modal-close:hover {
+      background: var(--red);
+    }
+
+    .modal-body {
+      padding: 36px;
+    }
+
+    .modal-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 28px;
+    }
+
+    .modal-spec {
+      background: var(--charcoal);
+      padding: 22px 20px;
+    }
+
+    .modal-spec p {
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-spec h4 {
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .modal-facts h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .modal-fact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .fact-bullet {
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      margin-top: 8px;
+    }
+
+    .modal-fact-item p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--warm-gray);
+      line-height: 1.7;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 50px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 3px;
+      color: var(--off-white);
+    }
+
+    .footer-logo span { color: var(--red); }
+
+    /* ─── KEYFRAMES ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(0.7); }
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav, .section-intro, .speed-section, footer { padding-left: 24px; padding-right: 24px; }
+      .cars-grid { grid-template-columns: 1fr; padding: 0 24px 80px; }
+      .car-card { aspect-ratio: 4/3; }
+      .section-intro { flex-direction: column; align-items: flex-start; }
+      .speed-section { grid-template-columns: 1fr; gap: 50px; padding: 80px 24px; }
+      .hero { padding: 0 24px 70px; }
+      .scroll-cue { display: none; }
+      .car-specs-row { opacity: 1; transform: none; }
+      .car-cta { opacity: 1; transform: none; }
+      .modal-specs-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">F<span>1</span></a>
+    <ul class="nav-links">
+      <li><a href="#cars">Cars</a></li>
+      <li><a href="#performance">Performance</a></li>
+      <li><a href="#teams">Teams</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="scroll-cue">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">2026 Season</div>
+      <h1 class="hero-title">Formula<br><em>One</em></h1>
+      <p class="hero-sub">
+        The pinnacle of motorsport engineering. Precision built to fractions of a millimetre. Pushing the boundaries of physics at over 360 km/h.
+      </p>
+      <div class="hero-actions">
+        <a href="#cars" class="btn-primary">Explore Cars</a>
+        <a href="#performance" class="btn-ghost">View Stats</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARS -->
+  <div id="cars" class="section-intro">
+    <h2>2024 F1 Car<br>Collection</h2>
+    <p>Seven engineering masterpieces from the 2024 grid — each car a product of thousands of hours of aerodynamic research, built for one purpose: to be the fastest thing on four wheels.</p>
+  </div>
+
+  <section class="cars-grid">
+
+    <div class="car-card" data-car="rb20">
+      <div class="car-bg" id="bg-rb20"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">01</div>
+        <div class="car-tag">Oracle Red Bull Racing</div>
+        <h3 class="car-card-name">RB20</h3>
+        <p class="car-card-team">Max Verstappen · Sergio Pérez</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Honda RBPT</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>362 km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>796 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('rb20')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="car-card" data-car="sf24">
+      <div class="car-bg" id="bg-sf24"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">02</div>
+        <div class="car-tag">Scuderia Ferrari</div>
+        <h3 class="car-card-name">SF-24</h3>
+        <p class="car-card-team">Charles Leclerc · Carlos Sainz</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Ferrari</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>354 km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>796 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('sf24')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="car-card" data-car="mcl38">
+      <div class="car-bg" id="bg-mcl38"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">03</div>
+        <div class="car-tag">McLaren Formula 1 Team</div>
+        <h3 class="car-card-name">MCL38</h3>
+        <p class="car-card-team">Lando Norris · Oscar Piastri</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Mercedes</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>356 km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>796 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('mcl38')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="car-card" data-car="w15">
+      <div class="car-bg" id="bg-w15"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">04</div>
+        <div class="car-tag">Mercedes-AMG Petronas F1 Team</div>
+        <h3 class="car-card-name">W15</h3>
+        <p class="car-card-team">Lewis Hamilton · George Russell</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Mercedes M15</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>350+ km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>798 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('w15')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="car-card" data-car="amr24">
+      <div class="car-bg" id="bg-amr24"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">05</div>
+        <div class="car-tag">Aston Martin Aramco F1 Team</div>
+        <h3 class="car-card-name">AMR24</h3>
+        <p class="car-card-team">Fernando Alonso · Lance Stroll</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Mercedes</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>340+ km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>796 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('amr24')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="car-card" data-car="fw46">
+      <div class="car-bg" id="bg-fw46"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">06</div>
+        <div class="car-tag">Williams Racing</div>
+        <h3 class="car-card-name">FW46</h3>
+        <p class="car-card-team">Alex Albon · Logan Sargeant</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Mercedes</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>340+ km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>796 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('fw46')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="car-card" data-car="a524">
+      <div class="car-bg" id="bg-a524"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-card-body">
+        <div class="car-number">07</div>
+        <div class="car-tag">BWT Alpine F1 Team</div>
+        <h3 class="car-card-name">A524</h3>
+        <p class="car-card-team">Pierre Gasly · Esteban Ocon</p>
+        <div class="car-specs-row">
+          <div class="spec-item"><p>Engine</p><h4>Renault E-Tech</h4></div>
+          <div class="spec-item"><p>Top Speed</p><h4>338+ km/h</h4></div>
+          <div class="spec-item"><p>Weight</p><h4>796 kg</h4></div>
+        </div>
+        <button class="car-cta" onclick="openModal('a524')">
+          Full Specs <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- TICKER -->
+  <div class="facts-strip">
+    <div class="facts-ticker">
+      <span>360+ km/h Top Speed</span>
+      <span>1.6L Hybrid Power Unit</span>
+      <span>Around 1000 Horsepower</span>
+      <span>796 kg Minimum Weight</span>
+      <span>2 Second Pit Stop</span>
+      <span>24 Race Calendar</span>
+      <span>360+ km/h Top Speed</span>
+      <span>1.6L Hybrid Power Unit</span>
+      <span>Around 1000 Horsepower</span>
+      <span>796 kg Minimum Weight</span>
+      <span>2 Second Pit Stop</span>
+      <span>24 Race Calendar</span>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE -->
+  <section id="performance" class="speed-section">
+    <div class="speed-left">
+      <h2>Feel<br>The <em>Speed</em></h2>
+      <p>Every gram is justified. Every millimetre of aerodynamic surface is optimised. Formula 1 cars are the most sophisticated racing machines ever built — a fusion of art and extreme engineering.</p>
+    </div>
+    <div class="speed-right">
+      <div class="speed-stat">
+        <div class="stat-number">360+</div>
+        <div class="stat-label">Km/h Top Speed</div>
+        <div class="stat-desc">Achieved on long straights like Monza and Baku. Aerodynamic drag settings are fine-tuned per circuit.</div>
+      </div>
+      <div class="speed-stat">
+        <div class="stat-number">~1000</div>
+        <div class="stat-label">Horsepower</div>
+      </div>
+      <div class="speed-stat">
+        <div class="stat-number">20</div>
+        <div class="stat-label">Drivers</div>
+      </div>
+      <div class="speed-stat">
+        <div class="stat-number">24</div>
+        <div class="stat-label">Race Rounds</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODALS -->
+  <div class="modal-backdrop" id="modal" onclick="closeOnBackdrop(event)">
+    <div class="modal" id="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-hero">
+        <div id="modal-img" style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
+        <div class="modal-hero-overlay"></div>
+        <div class="modal-hero-text">
+          <span id="modal-team"></span>
+          <h2 id="modal-title"></h2>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-specs-grid" id="modal-specs"></div>
+        <div class="modal-facts">
+          <h3>Key Facts</h3>
+          <div id="modal-facts-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">F<span>1</span></div>
+    <p>© 2026 Formula 1 Showcase · Built for Speed</p>
+  </footer>
+
+  <script>
+    const cars = {
+      rb20: {
+        title: 'RB20',
+        team: 'Oracle Red Bull Racing',
+        img: 'https://cdn.motor1.com/images/mgl/nNJEy6/s3/red-bull-rb20-2024-formula-1-car.webp',
+        imgFallback: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Honda RBPTH002' },
+          { label: 'Top Speed', value: '362 km/h' },
+          { label: 'Weight', value: '796 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'VER · PER' },
+          { label: 'Chassis', value: 'Carbon Fibre' }
+        ],
+        facts: [
+          'Unveiled at Red Bull\'s Milton Keynes factory on 15 February 2024, the RB20 succeeded the dominant RB19 with a surprisingly radical new design concept.',
+          'Powered by the Honda RBPTH002 power unit, the car dominated early-season rounds before being eventually outpaced by McLaren\'s MCL38 as the season progressed.',
+          'Max Verstappen clinched his fourth consecutive World Drivers\' Championship in the RB20, securing the title with two races to spare in Las Vegas.',
+          'Red Bull dropped to third in the Constructors\' Championship as McLaren and Ferrari outpaced them in the second half of the season — a rare slip for the reigning champions.'
+        ]
+      },
+      sf24: {
+        title: 'SF-24',
+        team: 'Scuderia Ferrari',
+        img: 'https://www.wsupercars.com/wallpapers-regular/Ferrari/2024-Ferrari-SF-24-001.jpg',
+        imgFallback: 'https://images.unsplash.com/photo-1558981359-219d6364c9c8?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Ferrari 066/12' },
+          { label: 'Top Speed', value: '354 km/h' },
+          { label: 'Weight', value: '796 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'LEC · SAI' },
+          { label: 'Founded', value: '1929' }
+        ],
+        facts: [
+          'The SF-24 featured a more tapered rear end compared to its predecessor, thanks to improved gearbox packaging and a redesigned floor.',
+          'Ferrari\'s 2025 SF-25 successor incorporated lessons from the SF-24 with sidepods positioned further rearwards and extensive aerodynamic revisions.',
+          'Lewis Hamilton\'s high-profile move to Ferrari for 2025 was announced during the 2024 season, generating enormous excitement around the Scuderia.',
+          'Scuderia Ferrari is the oldest active team in Formula 1, with over 200 race victories and 16 Constructors\' Championships to their name.'
+        ]
+      },
+      mcl38: {
+        title: 'MCL38',
+        team: 'McLaren Formula 1 Team',
+        img: 'https://cdn.motor1.com/images/mgl/nNJZqE/s3/mclaren-mcl38-2024.webp',
+        imgFallback: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Mercedes M15' },
+          { label: 'Top Speed', value: '356 km/h' },
+          { label: 'Weight', value: '796 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'NOR · PIA' },
+          { label: 'Base', value: 'Woking, UK' }
+        ],
+        facts: [
+          'The MCL38 won McLaren\'s ninth Constructors\' Championship in 2024 — ending a 26-year drought since their last title in 1998 — clinched at the Abu Dhabi Grand Prix.',
+          'It was the first championship-winning Formula 1 car to use customer engines since the Brawn BGP 001 in 2009, powered by Mercedes power units.',
+          'Both Lando Norris and Oscar Piastri achieved their first Formula 1 Grand Prix victories in the MCL38, with the car taking six race wins across the season.',
+          'The MCL38 won International Competition Car of the Year at the 2025 Autosport Awards, recognised as one of the most significant F1 cars of the modern era.'
+        ]
+      },
+      w15: {
+        title: 'W15',
+        team: 'Mercedes-AMG Petronas F1 Team',
+        img: 'https://cdn.motor1.com/images/mgl/nNJEyZ/s3/mercedes-amg-f1-w15-2024.webp',
+        imgFallback: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Mercedes M15 E' },
+          { label: 'Top Speed', value: '350+ km/h' },
+          { label: 'Weight', value: '798 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'HAM · RUS' },
+          { label: 'Wins', value: '4 Races' }
+        ],
+        facts: [
+          'The W15 featured an entirely new chassis and gearbox casing, with a striking silver-and-black livery marking the 90th anniversary of the iconic Silver Arrows name.',
+          'Lewis Hamilton ended a 56-race winless streak by winning the 2024 British Grand Prix in the W15 — his ninth win at Silverstone, a record for any driver at a single venue.',
+          'The W15 achieved four race wins across the season, with Russell taking Austria and Las Vegas and Hamilton winning Britain and Belgium.',
+          'It was Lewis Hamilton\'s final season with Mercedes after 12 years together — one of the most successful driver-team partnerships in Formula 1 history, with six world titles.'
+        ]
+      },
+      amr24: {
+        title: 'AMR24',
+        team: 'Aston Martin Aramco F1 Team',
+        img: 'https://www.astonmartinf1.com/image/upload/f_auto,q_auto/v1707735600/amr24-launch/amr24-launch-hero.jpg',
+        imgFallback: 'https://images.unsplash.com/photo-1588430637931-7a8f24eec55f?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Mercedes' },
+          { label: 'Top Speed', value: '340+ km/h' },
+          { label: 'Weight', value: '796 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'ALO · STR' },
+          { label: 'Livery', value: 'British Green' }
+        ],
+        facts: [
+          'Revealed at Aston Martin\'s newly completed Silverstone headquarters on 12 February 2024, the AMR24 was the first car built at the team\'s state-of-the-art AMR Technology Campus.',
+          'The AMR24 featured a major overhaul including a revised front wing, redesigned sidepods, and a switch to pushrod rear suspension — a significant technical change.',
+          'Two-time World Champion Fernando Alonso drove the AMR24 alongside Lance Stroll, with the team retaining 5th in the Constructors\' Championship despite not scoring a podium all season.',
+          'The British racing green livery is one of the most distinctive on the grid, drawing on Aston Martin\'s road car heritage and the historic colour of British motorsport.'
+        ]
+      },
+      fw46: {
+        title: 'FW46',
+        team: 'Williams Racing',
+        img: 'https://cdn.motor1.com/images/mgl/nNJBqL/s3/williams-fw46-2024-f1-car.webp',
+        imgFallback: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Mercedes' },
+          { label: 'Top Speed', value: '340+ km/h' },
+          { label: 'Weight', value: '796 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'ALB · SAR' },
+          { label: 'Founded', value: '1977' }
+        ],
+        facts: [
+          'Williams unveiled the FW46 in New York City, featuring a predominantly blue livery with a red and white pinstripe reflecting the team\'s British roots and new Komatsu sponsorship.',
+          'Williams holds nine Constructors\' Championships in their history — a remarkable record for a privateer team — though they have been working to rebuild since a difficult mid-2010s period.',
+          'Alex Albon was one of the standout drivers of the midfield in 2024, frequently outperforming the car\'s inherent pace to score valuable points for the team.',
+          'The FW46 was powered by a Mercedes power unit, part of Williams\'s long-standing technical partnership with the Silver Arrows engine programme.'
+        ]
+      },
+      a524: {
+        title: 'A524',
+        team: 'BWT Alpine F1 Team',
+        img: 'https://cdn.motor1.com/images/mgl/nNJqy6/s3/alpine-a524-2024-f1-car.webp',
+        imgFallback: 'https://images.unsplash.com/photo-1571987502227-9231b837d92a?q=80&w=1200&auto=format&fit=crop',
+        specs: [
+          { label: 'Engine', value: 'Renault E-Tech' },
+          { label: 'Top Speed', value: '338+ km/h' },
+          { label: 'Weight', value: '796 kg' },
+          { label: 'Power', value: '~1000 hp' },
+          { label: 'Drivers', value: 'GAS · OCO' },
+          { label: 'Base', value: 'Enstone, UK' }
+        ],
+        facts: [
+          'The A524 was described as "completely revised" by the team, launched at their Enstone factory with a striking black, blue and pink livery inspired by a collaboration with artist Felipe Pantone.',
+          'Alpine ran two distinct liveries in 2024 — the black-blue launch car and a black-pink version that appeared at selected races throughout the season.',
+          'Pierre Gasly and Esteban Ocon continued their partnership for 2024, with the team aiming to break back into the upper midfield after a challenging 2023 campaign.',
+          'The A524 was one of the few cars on the grid with a manufacturer-built power unit, using Renault\'s own E-Tech hybrid engine rather than a customer Mercedes or Ferrari unit.'
+        ]
+      }
+    };
+
+    function tryLoadImage(urls, onSuccess) {
+      if (!urls.length) return;
+      const img = new Image();
+      img.onload = () => onSuccess(urls[0]);
+      img.onerror = () => tryLoadImage(urls.slice(1), onSuccess);
+      img.src = urls[0];
+    }
+
+    const carImages = {
+      rb20: [
+        'https://i.gaw.to/content/photos/60/83/608358-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Max_Verstappen_2024_Bahrain_GP.jpg/1280px-Max_Verstappen_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/red-bull-rb20-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/rb20.jpg',
+        'https://images.unsplash.com/photo-1585011664466-b7bbe92f34ef?q=80&w=1200&auto=format&fit=crop'
+      ],
+      sf24: [
+        'https://i.gaw.to/content/photos/60/83/608359-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Charles_Leclerc_2024_Bahrain_GP.jpg/1280px-Charles_Leclerc_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/ferrari-sf24-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/sf24.jpg',
+        'https://images.unsplash.com/photo-1608236415053-8d2d15e3d13a?q=80&w=1200&auto=format&fit=crop'
+      ],
+      mcl38: [
+        'https://i.gaw.to/content/photos/60/83/608360-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Lando_Norris_2024_Bahrain_GP.jpg/1280px-Lando_Norris_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/mclaren-mcl38-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/mcl38.jpg',
+        'https://images.unsplash.com/photo-1598015438624-3c7c60c0c3d5?q=80&w=1200&auto=format&fit=crop'
+      ],
+      w15: [
+        'https://i.gaw.to/content/photos/60/83/608361-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Lewis_Hamilton_2024_Bahrain_GP.jpg/1280px-Lewis_Hamilton_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/mercedes-w15-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/w15.jpg',
+        'https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop'
+      ],
+      amr24: [
+        'https://i.gaw.to/content/photos/60/83/608362-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Fernando_Alonso_2024_Bahrain_GP.jpg/1280px-Fernando_Alonso_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/aston-martin-amr24-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/amr24.jpg',
+        'https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1200&auto=format&fit=crop'
+      ],
+      fw46: [
+        'https://i.gaw.to/content/photos/60/83/608363-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Alex_Albon_2024_Bahrain_GP.jpg/1280px-Alex_Albon_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/williams-fw46-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/fw46.jpg',
+        'https://images.unsplash.com/photo-1504893524553-b855bce32c67?q=80&w=1200&auto=format&fit=crop'
+      ],
+      a524: [
+        'https://i.gaw.to/content/photos/60/83/608364-voici-toutes-les-f1-qui-vont-participer-a-la-saison-2024.jpg?1024x640',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Pierre_Gasly_2024_Bahrain_GP.jpg/1280px-Pierre_Gasly_2024_Bahrain_GP.jpg',
+        'https://www.topgear.com/sites/default/files/2024/02/alpine-a524-2024.jpg',
+        'https://media.formula1.com/image/upload/f_auto/q_auto/v1708102929/fom-website/manual/Misc/2024/a524.jpg',
+        'https://images.unsplash.com/photo-1519003722824-194d4455a60c?q=80&w=1200&auto=format&fit=crop'
+      ]
+    };
+
+    Object.entries(carImages).forEach(([id, urls]) => {
+      tryLoadImage(urls, (src) => {
+        const el = document.getElementById('bg-' + id);
+        if (el) el.style.backgroundImage = `url('${src}')`;
+        const car = cars[id];
+        if (car) car.resolvedImg = src;
+      });
+    });
+
+    function openModal(id) {
+      const car = cars[id];
+      document.getElementById('modal-title').textContent = car.title;
+      document.getElementById('modal-team').textContent = car.team;
+      const modalImg = document.getElementById('modal-img');
+      modalImg.style.backgroundImage = `url('${car.resolvedImg || car.img}')`;
+      const specsEl = document.getElementById('modal-specs');
+      specsEl.innerHTML = car.specs.map(s => `<div class="modal-spec"><p>${s.label}</p><h4>${s.value}</h4></div>`).join('');
+      const factsEl = document.getElementById('modal-facts-list');
+      factsEl.innerHTML = car.facts.map(f => `<div class="modal-fact-item"><div class="fact-bullet"></div><p>${f}</p></div>`).join('');
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeOnBackdrop(e) {
+      if (e.target === document.getElementById('modal')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 80);
+    });
+  </script>
+</body>
+</html>
